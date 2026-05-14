@@ -4,11 +4,12 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "start": "concurrently \"npm run dev\" \"cd server && npm start\"",
-    "build": "vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "frontend": "cd frontend && npm run dev",
+    "backend": "cd server && npm run dev",
+    "start": "concurrently \"npm run frontend\" \"npm run backend\"",
+    "build:frontend": "cd frontend && npm run build",
+    "lint:frontend": "cd frontend && npm run lint",
+    "install:all": "npm install && cd frontend && npm install && cd ../server && npm install"
   },
   "dependencies": {
     "framer-motion": "^12.38.0",
