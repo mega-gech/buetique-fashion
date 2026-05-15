@@ -2,34 +2,22 @@ import mongoose from "mongoose";
 
 const orderSchema = new mongoose.Schema(
   {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: false // Optional for guest checkout
+    },
+
     customer: {
-      email: {
-        type: String,
-        required: true,
-      },
-      firstName: {
-        type: String,
-        required: true,
-      },
-      lastName: {
-        type: String,
-        required: true,
-      },
-      phone: {
-        type: String,
-        required: true,
-      },
+      email: String,
+      firstName: String,
+      lastName: String,
+      phone: String,
     },
 
     shippingAddress: {
-      address: {
-        type: String,
-        required: true,
-      },
-      city: {
-        type: String,
-        default: "Addis Ababa",
-      },
+      address: String,
+      city: String,
     },
 
     items: [
@@ -37,42 +25,31 @@ const orderSchema = new mongoose.Schema(
         productId: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "Product",
+          required: true
         },
         name: String,
         image: String,
         size: String,
-        qty: Number,
-        price: Number,
-      },
+        qty: {
+          type: Number,
+          required: true
+        },
+        price: Number
+      }
     ],
 
     totalAmount: {
       type: Number,
-      required: true,
+      required: true
     },
 
-    paymentStatus: {
+    status: {
       type: String,
-      enum: ["pending", "paid", "failed"],
-      default: "pending",
-    },
-
-    orderStatus: {
-      type: String,
-      enum: [
-        "pending",
-        "confirmed",
-        "processing",
-        "shipped",
-        "delivered",
-        "cancelled",
-      ],
-      default: "confirmed",
-    },
+      enum: ["pending", "paid", "shipped", "delivered", "cancelled"],
+      default: "pending"
+    }
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
 const Order = mongoose.model("Order", orderSchema);

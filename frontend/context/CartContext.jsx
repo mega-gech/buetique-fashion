@@ -61,10 +61,13 @@ export const CartProvider = ({ children }) => {
   0
 );
 
-const cartTotal = cartItems.reduce(
-  (total, item) => total + Number(item.price) * item.qty,
-  0
-);
+  const cartTotal = cartItems.reduce((total, item) => {
+    // Sanitize price: remove commas, "ETB", spaces, etc.
+    const cleanPrice = typeof item.price === 'string' 
+      ? item.price.replace(/[^0-9.]/g, '') 
+      : item.price;
+    return total + (Number(cleanPrice) || 0) * item.qty;
+  }, 0);
 
   return (
     <CartContext.Provider value={{
