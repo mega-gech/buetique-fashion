@@ -3,6 +3,7 @@ import API from "../services/axios"
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X, ShoppingBag, Search, Trash2, ArrowRight, User, LogOut } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);

@@ -86,7 +86,7 @@ export const getMyOrders = async (req, res) => {
 
 export const checkout = async (req, res) => {
   try {
-    const { items, shipping } = req.body;
+    const { items, shipping, userId } = req.body;
 
     if (!items || items.length === 0) {
       return res.status(400).json({
@@ -94,36 +94,43 @@ export const checkout = async (req, res) => {
       });
     }
 
-    const totalAmount = items.reduce(
-      (sum, item) =>
-        sum + Number(item.price) * item.qty,
-      0
-    );
+    const totalAmount = items.reduce((sum, item) => {
+      const cleanPrice = typeof item.price === 'string'
+        ? item.price.replace(/[^0-9.]/g, '')
+        : item.price;
+      return sum + (Number(cleanPrice) || 0) * item.qty;
+    }, 0);
 
-    const order = await Order.create({
-  customer: {
-    email: shipping.email,
-    firstName: shipping.firstName,
-    lastName: shipping.lastName,
-    phone: shipping.phone,
-  },
+    const orderData = {
+      customer: {
+        email: shipping.email,
+        firstName: shipping.firstName,
+        lastName: shipping.lastName,
+        phone: shipping.phone,
+      },
 
-  shippingAddress: {
-    address: shipping.address,
-    city: shipping.city || "Addis Ababa",
-  },
+      shippingAddress: {
+        address: shipping.address,
+        city: shipping.city || "Addis Ababa",
+      },
 
-  items: items.map(item => ({
-    productId: item.productId,
-    name: item.name,
-    image: item.image,
-    size: item.size,
-    qty: item.qty,
-    price: item.price,
-  })),
+      items: items.map(item => ({
+        productId: item.productId,
+        name: item.name,
+        image: item.image,
+        size: item.size,
+        qty: item.qty,
+        price: item.price,
+      })),
 
-  totalAmount,
-});
+      totalAmount,
+    };
+
+    if (userId) {
+      orderData.user = userId;
+    }
+
+    const order = await Order.create(orderData);
 
     res.status(201).json({
       success: true,

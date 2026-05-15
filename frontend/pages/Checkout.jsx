@@ -3,9 +3,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ChevronLeft, CheckCircle } from 'lucide-react';
 import API from "../services/axios"
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 
 const Checkout = () => {
   const { cartItems, cartTotal, clearCart } = useCart();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [isSuccess, setIsSuccess] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -33,7 +35,7 @@ const Checkout = () => {
     
     // Prepare items for backend (mapping _id to productId)
     const items = cartItems.map(item => ({
-      productId: item._id,
+      productId: item._id || item.id,
       name: item.name,
       image: item.image,
       size: item.size,
@@ -42,11 +44,17 @@ const Checkout = () => {
     }));
     
     try {
-      const response = await API.post('checkout', {
-          items,
-          shipping,
-        }
-      );
+      const payload = {
+        items,
+        shipping,
+      };
+
+      // If user is logged in, attach their ID
+      if (user) {
+        payload.userId = user.id || user._id;
+      }
+
+      const response = await API.post('checkout', payload);
 
       if (response.status === 201) {
         clearCart();
@@ -56,9 +64,8 @@ const Checkout = () => {
       }
       
     } catch (error) {
-      const message =
-      error.response?.data?.message || "Error processing checkout";
-       setErrorMsg(message);
+      const message = error.response?.data?.message || "Error processing checkout";
+      setErrorMsg(message);
     } finally {
       setIsProcessing(false);
     }
@@ -121,15 +128,15 @@ const Checkout = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="col-span-1 md:col-span-2">
                     <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
-                    <input name="email" required type="email" className="w-full p-3 border border-gray-300 rounded focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-colors" placeholder="you@example.com" />
+                    <input name="email" required type="email" defaultValue={user?.email || ''} className="w-full p-3 border border-gray-300 rounded focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-colors" placeholder="you@example.com" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">First Name</label>
-                    <input name="firstName" required type="text" className="w-full p-3 border border-gray-300 rounded focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-colors" />
+                    <input name="firstName" required type="text" defaultValue={user?.name?.split(' ')[0] || ''} className="w-full p-3 border border-gray-300 rounded focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-colors" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
-                    <input name="lastName" required type="text" className="w-full p-3 border border-gray-300 rounded focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-colors" />
+                    <input name="lastName" required type="text" defaultValue={user?.name?.split(' ').slice(1).join(' ') || ''} className="w-full p-3 border border-gray-300 rounded focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-colors" />
                   </div>
                   <div className="col-span-1 md:col-span-2">
                     <label className="block text-sm font-medium text-gray-700 mb-2">Address</label>
@@ -197,7 +204,7 @@ const Checkout = () => {
                     <div className="flex-1 flex flex-col justify-center">
                       <h3 className="font-serif font-medium text-primary line-clamp-1">{item.name}</h3>
                       <p className="text-xs text-gray-500 mt-1 uppercase">Size: {item.size} | Qty: {item.qty}</p>
-                      <p className="text-accent font-medium mt-1">{item.price}</p>
+                      <p className="text-accent font-medium mt-1">{Number(item.price).toLocaleString()} ETB</p>
                     </div>
                   </div>
                 ))}
