@@ -109,7 +109,7 @@ const NewArrivals = () => {
                   <button 
                     onClick={(e) => { 
                       e.stopPropagation(); 
-                      const token = localStorage.getItem('boutique_token');
+                      const token = localStorage.getItem('token');
                       if (!token) {
                         // Store pending action and product info
                         const pendingItem = {
@@ -150,7 +150,7 @@ const NewArrivals = () => {
                 >
                   {product.name}
                 </h3>
-                <p className="text-primary font-semibold">{product.price}</p>
+                <p className="text-primary font-semibold">{Number(product.price).toLocaleString()} ETB</p>
               </div>
             </div>
           ))}

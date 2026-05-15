@@ -147,7 +147,26 @@ const Checkout = () => {
               </div>
 
               {/* Payment Details */}
-         
+              <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-100">
+                <h2 className="text-xl font-medium text-primary mb-6 uppercase tracking-wider text-sm border-b pb-4">Payment Method</h2>
+                <div className="space-y-4">
+                  <label className="flex items-center p-4 border border-accent bg-accent/5 rounded-lg cursor-pointer transition-all">
+                    <input type="radio" name="paymentMethod" value="cod" defaultChecked className="w-4 h-4 text-accent focus:ring-accent" />
+                    <div className="ml-4">
+                      <span className="block font-medium text-primary">Cash on Delivery</span>
+                      <span className="block text-xs text-gray-500">Pay when your items arrive at your doorstep in Addis Ababa.</span>
+                    </div>
+                  </label>
+                  
+                  <label className="flex items-center p-4 border border-gray-200 rounded-lg cursor-not-allowed opacity-60 transition-all">
+                    <input type="radio" name="paymentMethod" value="telebirr" disabled className="w-4 h-4 text-gray-400" />
+                    <div className="ml-4">
+                      <span className="block font-medium text-gray-400">Telebirr (Coming Soon)</span>
+                      <span className="block text-xs text-gray-400">Secure mobile payment for our Ethiopian customers.</span>
+                    </div>
+                  </label>
+                </div>
+              </div>
               {/* Action Button */}
               {errorMsg && <div className="p-4 bg-red-50 text-red-600 rounded border border-red-100">{errorMsg}</div>}
               <button 

@@ -90,7 +90,7 @@ const ProductDetails = () => {
           <div className="w-full md:w-1/2 flex flex-col">
             <span className="text-accent text-sm font-medium tracking-[0.2em] uppercase mb-2">{product.category}</span>
             <h1 className="text-4xl lg:text-5xl font-serif font-bold text-primary mb-4 leading-tight">{product.name}</h1>
-            <p className="text-2xl text-gray-600 font-medium mb-8">{product.price}</p>
+            <p className="text-2xl text-gray-600 font-medium mb-8">{Number(product.price).toLocaleString()} ETB</p>
 
             <div className="prose text-gray-500 font-light mb-10 leading-relaxed">
               <p>
@@ -138,7 +138,7 @@ const ProductDetails = () => {
                       return;
                     }
                     
-                    const token = localStorage.getItem('boutique_token');
+                    const token = localStorage.getItem('token');
                     if (!token) {
                       // Store pending action and product info
                       const pendingItem = {

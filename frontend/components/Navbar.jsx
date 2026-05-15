@@ -12,7 +12,8 @@ const Navbar = () => {
   const [products, setProducts] = useState([]);
 
   const { cartItems, cartCount, cartTotal, removeFromCart, updateQuantity, isCartOpen, setIsCartOpen } = useCart();
-  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('boutique_token'));
+  const { token, user, logout, isAuthenticated } = useAuth();
+  const isLoggedIn = isAuthenticated;
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -40,7 +41,7 @@ const Navbar = () => {
     
     // Check login status periodically or on mount
     const checkLogin = () => {
-      setIsLoggedIn(!!localStorage.getItem('boutique_token'));
+      // Logic handled by AuthContext now
     };
     window.addEventListener('storage', checkLogin);
     
@@ -96,8 +97,7 @@ const Navbar = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('boutique_token');
-    setIsLoggedIn(false);
+    logout();
     navigate('/');
   };
 
@@ -142,9 +142,12 @@ const Navbar = () => {
               </button>
               
               {isLoggedIn ? (
-                <button onClick={handleLogout} title="Logout" className="text-primary hover:text-red-500 transition-colors">
-                  <LogOut size={20} />
-                </button>
+                <div className="flex items-center space-x-4">
+                  <span className="text-xs font-medium text-gray-400 uppercase tracking-widest hidden lg:block">Hello, {user?.name?.split(' ')[0]}</span>
+                  <button onClick={handleLogout} title="Logout" className="text-primary hover:text-red-500 transition-colors">
+                    <LogOut size={20} />
+                  </button>
+                </div>
               ) : (
                 <button onClick={() => navigate('/login')} title="Login" className="text-primary hover:text-accent transition-colors">
                   <User size={20} />

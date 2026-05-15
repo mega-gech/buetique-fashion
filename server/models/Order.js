@@ -5,7 +5,19 @@ const orderSchema = new mongoose.Schema(
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true
+      required: false // Optional for guest checkout
+    },
+
+    customer: {
+      email: String,
+      firstName: String,
+      lastName: String,
+      phone: String,
+    },
+
+    shippingAddress: {
+      address: String,
+      city: String,
     },
 
     items: [
@@ -15,14 +27,18 @@ const orderSchema = new mongoose.Schema(
           ref: "Product",
           required: true
         },
-        quantity: {
+        name: String,
+        image: String,
+        size: String,
+        qty: {
           type: Number,
           required: true
-        }
+        },
+        price: Number
       }
     ],
 
-    totalPrice: {
+    totalAmount: {
       type: Number,
       required: true
     },
