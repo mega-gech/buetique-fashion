@@ -2,34 +2,10 @@ import mongoose from "mongoose";
 
 const orderSchema = new mongoose.Schema(
   {
-    customer: {
-      email: {
-        type: String,
-        required: true,
-      },
-      firstName: {
-        type: String,
-        required: true,
-      },
-      lastName: {
-        type: String,
-        required: true,
-      },
-      phone: {
-        type: String,
-        required: true,
-      },
-    },
-
-    shippingAddress: {
-      address: {
-        type: String,
-        required: true,
-      },
-      city: {
-        type: String,
-        default: "Addis Ababa",
-      },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true
     },
 
     items: [
@@ -37,42 +13,27 @@ const orderSchema = new mongoose.Schema(
         productId: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "Product",
+          required: true
         },
-        name: String,
-        image: String,
-        size: String,
-        qty: Number,
-        price: Number,
-      },
+        quantity: {
+          type: Number,
+          required: true
+        }
+      }
     ],
 
-    totalAmount: {
+    totalPrice: {
       type: Number,
-      required: true,
+      required: true
     },
 
-    paymentStatus: {
+    status: {
       type: String,
-      enum: ["pending", "paid", "failed"],
-      default: "pending",
-    },
-
-    orderStatus: {
-      type: String,
-      enum: [
-        "pending",
-        "confirmed",
-        "processing",
-        "shipped",
-        "delivered",
-        "cancelled",
-      ],
-      default: "confirmed",
-    },
+      enum: ["pending", "paid", "shipped", "delivered", "cancelled"],
+      default: "pending"
+    }
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
 const Order = mongoose.model("Order", orderSchema);
