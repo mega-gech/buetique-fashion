@@ -1,6 +1,7 @@
 import express from "express";
 import { checkout, getProducts, getProduct, subscribers } from "../controllers/orderController.js";
 
+
 const router = express.Router();
 
 router.post("/checkout", checkout);
