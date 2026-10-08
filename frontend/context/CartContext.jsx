@@ -14,7 +14,7 @@ export const CartProvider = ({ children }) => {
       // Filter out any duplicates that might have been saved during the bug
       return items.filter((item, index, self) => 
         index === self.findIndex((t) => t.cartId === item.cartId)
-      );
+      ); 
     } catch (e) {
       return [];
     }
