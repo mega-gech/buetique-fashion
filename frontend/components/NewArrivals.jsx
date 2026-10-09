@@ -94,7 +94,7 @@ const NewArrivals = () => {
                   className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-110"
                 />
                 
-                {/* Overlay Actions */}
+                {/* Overlay Action */}
                 <div 
                   className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4 cursor-pointer"
                   onClick={() => navigate(`/product/${product._id || product.id}`)}
